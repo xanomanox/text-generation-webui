@@ -72,8 +72,8 @@ export CUDA_HOME="$CUDA_PATH"
 # activate installer env
 source "$CONDA_ROOT_PREFIX/etc/profile.d/conda.sh" # otherwise conda complains about 'shell not initialized' (needed when running in a script)
 conda activate "$INSTALL_ENV_DIR"
-echo "Debug env var is set to $DEBUG_CONTAINER_INSTALL"
-if [ "$DEBUG_CONTAINER_INSTALL" == "1" ]; then
+echo "Debug env var is set to ${DEBUG_CONTAINER_INSTALL}"
+if [[ "${DEBUG_CONTAINER_INSTALL}" == "1" ]]; then
     echo "Starting one_click.py with debugpy for VS Code remote debugging"
     python -m pip show debugpy &>/dev/null || python -m pip install debugpy
     python -m debugpy --listen 0.0.0.0:5678 --wait-for-client one_click.py $@
