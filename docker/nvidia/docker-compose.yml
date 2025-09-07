@@ -29,7 +29,7 @@ services:
     ports:
       - "${HOST_PORT:-7860}:${CONTAINER_PORT:-7860}"
       - "${HOST_API_PORT:-5000}:${CONTAINER_API_PORT:-5000}"
-      - "${HOST_DEBUG_PORT:-5678}:${CONTAINER_DEBUG_PORT:-5678}"
+      - "127.0.0.1:${HOST_DEBUG_PORT:-5678}:${CONTAINER_DEBUG_PORT:-5678}"
     stdin_open: true
     tty: true
     volumes:

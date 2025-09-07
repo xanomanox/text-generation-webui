@@ -76,7 +76,7 @@ echo "Debug env var is set to ${DEBUG_CONTAINER_INSTALL}"
 if [[ "${DEBUG_CONTAINER_INSTALL}" == "1" ]]; then
     echo "Starting one_click.py with debugpy for VS Code remote debugging"
     python -m pip show debugpy &>/dev/null || python -m pip install debugpy
-    python -m debugpy --listen 127.0.0.1:5678 --wait-for-client one_click.py $@
+    python -m debugpy --listen 0.0.0.0:5678 --wait-for-client one_click.py $@
 else
     # setup installer env
     python one_click.py $@
