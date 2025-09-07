@@ -447,16 +447,24 @@ def update_requirements(initial_installation=False, pull=True):
 
     if not initial_installation and not wheels_changed:
         textgen_requirements = [line for line in textgen_requirements if '.whl' not in line]
+        print("Skipping .whl files as they were not changed.")
 
     # handle flash-attn separately
+    print_big_message("Isolating flash-attn for separate installation.")
+    print("BEFORE: textgen_requirements length: ", len(textgen_requirements))
     for line in textgen_requirements:
         if "flash_attn" in line and ".whl" in line and "cp311-linux_x86_64" in line:
             textgen_requirements.remove(line)
-            print("found flash_attn, removing from list")
+            print("found flash_attn wheel, removing from list")
             flash_attn_whl = line
-            print("adding flash_attn to solo build list")
-    with open('flash_attn_reqs.txt', 'w') as file:
-        file.write(flash_attn_whl)
+            print("adding flash_attn wheel to solo build list")
+            break
+    print("AFTER: textgen_requirements length: ", len(textgen_requirements))
+    if len(flash_attn_whl) == 0:
+        print("flash_attn not found in requirements, skipping solo build list")
+    else:  
+        with open('flash_attn_reqs.txt', 'w') as file:
+            file.write(flash_attn_whl)
 
     with open('temp_requirements.txt', 'w') as file:
         file.write('\n'.join(textgen_requirements))
@@ -472,8 +480,11 @@ def update_requirements(initial_installation=False, pull=True):
     # Install/update the project requirements
     run_cmd("python -m pip install -r temp_requirements.txt --upgrade", assert_success=True, environment=True)
     # Install flash attention
-    run_cmd("python -m pip install -r flash_attn_reqs.txt --upgrade --no-build-isolation --no-cache-dir", assert_success=True, environment=True)
-
+    if len(flash_attn_whl) > 0:
+        print_big_message("Installing flash-attn separately.")
+        run_cmd("python -m pip install -r flash_attn_reqs.txt --upgrade --no-build-isolation --no-cache-dir", assert_success=True, environment=True)
+    else:
+        print_big_message("Skipping flash-attn installation as it was not found in requirements.")
 
     # Clean up
     os.remove('temp_requirements.txt')
