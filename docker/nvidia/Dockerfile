@@ -18,6 +18,7 @@ RUN GPU_CHOICE=A LAUNCH_AFTER_INSTALL=FALSE INSTALL_EXTENSIONS=TRUE ./start_linu
 # first comment out wheel in requirements.txt to avoid conflict
 RUN pip install --no-build-isolation --no-cache-dir --force-reinstall --no-deps \
   https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3+cu12torch2.7cxx11abiFALSE-cp311-cp311-linux_x86_64.whl
+RUN python -c "import flash_attn_2_cuda; print('Flash-attention import succeeded')"
 COPY /user_data/CMD_FLAGS.txt /home/app/text-generation-webui/user_data
 EXPOSE ${CONTAINER_PORT:-7860} ${CONTAINER_API_PORT:-5000} ${CONTAINER_API_STREAM_PORT:-5005}
 WORKDIR /home/app/text-generation-webui
