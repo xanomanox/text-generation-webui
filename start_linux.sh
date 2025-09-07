@@ -80,3 +80,4 @@ if [[ "${DEBUG_CONTAINER_INSTALL}" == "1" ]]; then
 else
     # setup installer env
     python one_click.py $@
+fi
