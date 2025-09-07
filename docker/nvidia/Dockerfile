@@ -14,15 +14,6 @@ WORKDIR /home/app/
 RUN git clone https://github.com/oobabooga/text-generation-webui.git 
 WORKDIR /home/app/text-generation-webui
 RUN GPU_CHOICE=A LAUNCH_AFTER_INSTALL=FALSE INSTALL_EXTENSIONS=TRUE ./start_linux.sh --verbose
-# special case for flash attention per https://github.com/Dao-AILab/flash-attention/issues/1816#issue-3327985602
-# first comment out wheel in requirements.txt to avoid conflict
-RUN bash -c "source /home/app/installer_files/conda/etc/profile.d/conda.sh && \
-             conda activate /home/app/installer_files/env && \
-             pip install --no-build-isolation --no-cache-dir \
-             https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3+cu12torch2.7cxx11abiFALSE-cp311-cp311-linux_x86_64.whl"
-RUN bash -c "source /home/app/installer_files/conda/etc/profile.d/conda.sh && \
-             conda activate /home/app/installer_files/env && \
-             python -c 'import flash_attn_2_cuda; print(\"Flash-attention import succeeded\")'"
 COPY /user_data/CMD_FLAGS.txt /home/app/text-generation-webui/user_data
 EXPOSE ${CONTAINER_PORT:-7860} ${CONTAINER_API_PORT:-5000} ${CONTAINER_API_STREAM_PORT:-5005}
 WORKDIR /home/app/text-generation-webui

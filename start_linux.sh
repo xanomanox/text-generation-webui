@@ -72,6 +72,9 @@ export CUDA_HOME="$CUDA_PATH"
 # activate installer env
 source "$CONDA_ROOT_PREFIX/etc/profile.d/conda.sh" # otherwise conda complains about 'shell not initialized' (needed when running in a script)
 conda activate "$INSTALL_ENV_DIR"
-
-# setup installer env
-python one_click.py $@
+if [[ "${DEBUG_CONTAINER_INSTALL}" == "1" ]]; then
+    python -m pip show debugpy &>/dev/null || python -m pip install debugpy
+    python -m debugpy --listen 0.0.0.0:5678 --wait-for-client one_click.py $@
+else
+    # setup installer env
+    python one_click.py $@
