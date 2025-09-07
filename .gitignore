@@ -31,3 +31,6 @@ wandb
 /docker-compose.yml
 /Dockerfile
 .env
+
+# mano build
+wheel.txt

@@ -448,6 +448,16 @@ def update_requirements(initial_installation=False, pull=True):
     if not initial_installation and not wheels_changed:
         textgen_requirements = [line for line in textgen_requirements if '.whl' not in line]
 
+    # handle flash-attn separately
+    for line in textgen_requirements:
+        if "flash_attn" in line and ".whl" in line and "cp311-linux_x86_64" in line:
+            textgen_requirements.remove(line)
+            print("found flash_attn, removing from list")
+            flash_attn_whl = line
+            print("adding flash_attn to solo build list")
+    with open('flash_attn_reqs.txt', 'w') as file:
+        file.write(flash_attn_whl)
+
     with open('temp_requirements.txt', 'w') as file:
         file.write('\n'.join(textgen_requirements))
 
@@ -461,6 +471,9 @@ def update_requirements(initial_installation=False, pull=True):
 
     # Install/update the project requirements
     run_cmd("python -m pip install -r temp_requirements.txt --upgrade", assert_success=True, environment=True)
+    # Install flash attention
+    run_cmd("python -m pip install -r flash_attn_reqs.txt --upgrade --no-build-isolation --no-cache-dir", assert_success=True, environment=True)
+
 
     # Clean up
     os.remove('temp_requirements.txt')
