@@ -1,6 +1,7 @@
 version: "3.3"
 services:
   text-generation-webui:
+    container_name: textgen_g0
     build:
       context: .
       args:
@@ -32,10 +33,12 @@ services:
     tty: true
     volumes:
       - ./user_data:/home/app/text-generation-webui/user_data
+    environment:
+      NVIDIA_VISIBLE_DEVICES: 1
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              count: all
               capabilities: [gpu]
+              device_ids: ["0"]   # <── Pin to GPU0
