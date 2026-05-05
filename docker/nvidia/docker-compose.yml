@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   text-generation-webui:
-    container_name: textgen_g0
+    container_name: textgen_g2
     build:
       context: .
       args:
@@ -41,4 +41,4 @@ services:
           devices:
             - driver: nvidia
               capabilities: [gpu]
-              device_ids: ["0"]   # <── Pin to GPU0
+              device_ids: ["2"]   # <── Pin to GPU2 Sept 30 2025
